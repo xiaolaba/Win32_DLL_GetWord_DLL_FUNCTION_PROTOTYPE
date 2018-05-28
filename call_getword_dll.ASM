@@ -6,6 +6,7 @@
 ;; test done, ASM to call &load dll is successful
 ;; 2018-05-28 08:37:17
 ;; by xiaolaba
+;; REF : https://programmer209.wordpress.com/2015/05/31/fasm-using-the-c-file-functions/
 
 
 
@@ -31,7 +32,6 @@ section '.text' code readable executable
         invoke  SetLicenseID,_dummyID   ;;To do, how to test if this function call is working ?
         invoke  MessageBox,NULL,_dummyID,_loaddll,MB_OK
 
-
         invoke  ExitProcess,0
 
 
@@ -42,8 +42,9 @@ section '.data' data readable writeable
   _error TCHAR 'Win32 program template',0
   _loaddll TCHAR 'Win32 program template, load getword.dll done',0
 
+
    ;; my test code for getword.dll load
-  _dummyID    TCHAR '_dummyID {068AB1E7-CDEF-46f2-8357-105793BC7C92}',0
+  _dummyID    TCHAR 'test program to load DLL, _dummyID {068AB1E7-CDEF-46f2-8357-105793BC7C92}',0
 
 
 section '.idata' import data readable writeable
