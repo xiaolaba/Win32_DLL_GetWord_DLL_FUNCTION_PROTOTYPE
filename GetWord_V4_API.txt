@@ -1,0 +1,418 @@
+// GetWord v4 API Reference
+// downlaod http://www.textcapture.com/gb/api.htm, http://www.textcapture.com/en/api.htm
+// 2018-05-28 08:37:17
+// by xiaolaba
+// copy and format this API document to be C function prototype, for VC++ call and test
+
+
+
+VOID SetLicenseID(
+  LPCTSTR szLicenseID   // LicenseID
+);
+/*
+SetLicenseID
+The SetLicenseID sets the LicenseID.
+The LicenseID string is something like {068AB1E7-CDEF-46f2-8357-105793BC7C92}. 
+SetLicenseID must be called properly in your program.
+*/
+
+
+VOID SetNotifyWnd(
+  LONG hWndNotify    // the window handle which will receive the capture-ready message from GetWord
+);
+/*
+The SetNotifyWnd sets which window will receive the capture-ready message from GetWord.
+hWndNotify
+    [in] the window handle which will receive the capture-ready message from GetWord.
+SetNofifyWnd must be called properly in your program.
+*/
+
+
+
+VOID UnSetNotifyWnd(
+  LONG hWndNotify    // the window handle to remove
+);
+/*
+The UnSetNotifyWnd removes the window handle which receive the capture-ready message from GetWord.
+hWndNotify
+    [in] the window handle to remove from GetWord' notification list.
+UnSetNofifyWnd must be called properly in your program. And it should be called when your program is exiting.
+*/
+
+
+
+
+VOID SetDelay(
+  LONG uMilliSec    // the milliseconds to wait before starting the capturing
+);
+/*
+The SetDelay sets how many milliseconds should be waited before starting the capturing when user moved the mouse cursor. The default is 400 milliseconds.
+uMilliSec
+    [in] the milliseconds to wait before starting the capturing when user moved the mouse cursor.
+SetDelay is not necessary to be called in your program unless you want to change the default delay time.
+EnableCursorCapture
+*/
+
+
+
+
+BOOL EnableCursorCapture(
+  BOOL bEnable    // enable or disable text-capturing with mouse cursor
+);
+/*
+The EnableCursorCapture enables/disables text-capturing with mouse cursor. 
+Text-capturing with mouse cursor is set to disable by default.
+bEnable
+    [in] Specifies whether to enable or disable text-capturing with mouse cursor. 
+    If TRUE, the text-capturing with mouse cursor is enabled. 
+    If FALSE, text-capturing with mouse cursor is disabled.
+Return Values
+If succeeds, the return value is nonzero. If fails, the return value is zero.
+Text-capturing with mouse cursor is set to disable by default. If you want to 
+enable text-capturing with mouse cursor, you need to call this function, and 
+pass in the bEnable parameter with TRUE.
+EnableHotkeyCapture
+*/
+
+
+
+
+BOOL EnableHotkeyCapture(
+  BOOL bEnable,      // enable or disable text-capturing with hotkey
+  LONG fsModifiers,  // key-modifier options
+  LONG vk,           // virtual-key code
+);
+/*
+The EnableHotkeyCapture enables/disables text-capturing with hotkey. 
+Text-capturing with hotkey is set to disable by default.
+bEnable
+    [in] Specifies whether to enable or disable text-capturing with hotkey. 
+    If TRUE, the text-capturing with hotkey is enabled. 
+    If FALSE, text-capturing with hotkey is disabled.
+fsModifiers
+    [in] Specifies keys that must be pressed in combination with the key 
+    specified by the vk parameter in order to generate the WM_HOTKEY message. 
+    The fsModifiers parameter can be a combination of the following values.
+    Value 	Meaning
+    MOD_ALT 	Either ALT key must be held down.
+    MOD_CONTROL 	Either CTRL key must be held down.
+    MOD_SHIFT 	Either SHIFT key must be held down.
+    MOD_WIN 	Either WINDOWS key was held down. These keys are labeled with the Microsoft Windows logo.
+vk
+    [in] Specifies the virtual-key code of the hot key. 
+
+Return Values
+If succeeds, the return value is nonzero. If fails, the return value is zero.
+Remarks
+
+When a key is pressed, the system looks for a match against all hot keys. Upon 
+finding a match, the system posts the WM_HOTKEY message to the message queue of 
+the thread that registered the hot key. This message is disposed by GetWord 
+component automatically. You need not to care about this.
+
+This function cannot associate a hot key with a window created by another thread.
+
+EnableHotkeyCapture fails if the keystrokes specified for the hot key have 
+already been registered by another hot key.
+
+Windows NT4 and Windows 2000/XP: The F12 key is reserved for use by the debugger 
+at all times, so it should not be registered as a hot key. Even when you are not 
+debugging an application, F12 is reserved in case a kernel-mode debugger or a 
+just-in-time debugger is resident.
+*/
+
+
+
+BOOL GetString(
+  LONG  x,          // the x position of the point which you want to capture text from
+  LONG  y,          // the y position of the point which you want to capture text from
+  BSTR* pstr,       // the captured string
+  LONG* pos         // zero-based point(x,y) position in the captured string   
+
+);
+/*
+The GetString gets the string at a given point.
+Parameters
+x
+    [in] Specifies the x position of the point which you want to capture text from.
+y
+    [in] Specifies the y position of the point which you want to capture text from.
+pstr 
+    [out] Pointer to a BSTR string that receives the captured string.
+pos
+    [out] Pointer to a LONG variable that receives the point (x,y) position in the captured string. 
+    If the point (x,y) is on the first character of the captured string, pos is 0. 
+    If the point (x,y) is on the second character of the captured string, pos is 1, etc. 
+    If the point (x,y) is not in the captured string, pos is -1.
+
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreeString should be called after successfully getting the captured string. In 
+developments which deallocate string automatically, such as Visual Basic, FreeString 
+needs not to be called after successfully getting the captured string.
+*/
+
+
+
+BOOL GetRectString(
+  LONG  hWnd,       // the window handle to capture
+  LONG  left,       // x-coordinate of upper-left corner
+  LONG  top,        // y-coordinate of upper-left corner
+  LONG  right,      // x-coordinate of lower-right corner
+  LONG  bottom,     // y-coordinate of lower-right corner
+  BSTR* pstr,       // the captured string
+);
+/*
+The GetRectString gets all the strings in a specified rectangle
+Parameters
+hWnd
+    [in] Specifies the window handle to capture. If hWnd is NULL, all the windows 
+    in the specified rectangle will be used.
+left
+    [in] Specifies the x-coordinate of upper-left corner of the capturing rectangle in the client coordinates. 
+top
+    [in] Specifies the y-coordinate of upper-left corner of the capturing rectangle in the client coordinates.
+right
+    [in] Specifies the x-coordinate of lower-right corner of the capturing rectangle in the client coordinates.
+bottom
+    [in] Specifies the y-coordinate of lower-right corner of the capturing rectangle in the client coordinates.
+pstr 
+    [out] Pointer to a BSTR string that receives the captured string. 
+
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreeString should be called after successfully getting the captured string. 
+In developments which deallocate string automatically, such as Visual Basic, 
+FreeString needs not to be called after successfully getting the captured string.
+*/
+
+
+
+
+BOOL GetHighlightText(
+  LONG  hWnd,       // the window handle to capture
+  BSTR* pstr,       // the captured string
+);
+/*
+The GetHighlightText gets the selected (highlighted) text in a given window.
+Parameters
+
+hWnd
+    [in] Specifies the window handle to capture. This parameter must be a valid handle, it can not be NULL.
+pstr 
+    [out] Pointer to a BSTR string that receives the captured string. 
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreeString should be called after successfully getting the captured string. 
+
+In developments which deallocate string automatically, such as Visual Basic, 
+FreeString needs not to be called after successfully getting the captured string.
+*/
+
+
+
+BOOL FreeString(
+  BSTR* pstr     // Pointer to a BSTR string
+);
+/*
+The FreeString deallocates a string allocated previously by GetString or GetRectString.
+Parameters
+pstr
+    [in, out] Pointer to a BSTR string that should be deallocated. 
+    After successfully deallocated the string, pstr is set to NULL.
+
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreeString should be called after successfully getting the captured string with 
+GetString, GetRectString, GetHighlightText or GetPairItem. 
+
+In developments which deallocate string automatically, such as Visual Basic, 
+FreeString needs not to be called after successfully getting the captured string  
+with GetString, GetRectString, GetHighlightText or GetPairItem.
+*/
+
+
+
+LONG GetRectStringPairs(
+  LONG  hWnd,       // the window handle to capture
+  LONG  left,       // x-coordinate of upper-left corner
+  LONG  top,        // y-coordinate of upper-left corner
+  LONG  right,      // x-coordinate of lower-right corner
+  LONG  bottom,     // y-coordinate of lower-right corner
+  BSTR* pstr,       // the captured string
+  BSTR* prectlist,  // the rectangle list
+);
+/*
+The GetRectStringPairs gets all the pairs of (substring, substring's rectangle) in a specified rectangle.
+
+Parameters
+
+hWnd
+    [in] Specifies the window handle to capture. If hWnd is NULL, all the windows in the specified rectangle will be used.
+
+left
+    [in] Specifies the x-coordinate of upper-left corner of the capturing rectangle in the client coordinates 
+top
+    [in] Specifies the y-coordinate of upper-left corner of the capturing rectangle in the client coordinates
+right
+    [in] Specifies the x-coordinate of lower-right corner of the capturing rectangle in the client coordinates
+bottom
+    [in] Specifies the y-coordinate of lower-right corner of the capturing rectangle in the client coordinates
+pstr 
+    [out] Pointer to a BSTR string that receives the captured string. 
+prectlist
+    [out] Pointer to a list. Each element in the list is a structure which contains six parts: (s_len, s_cursorpos, s_left, s_top, s_right, s_bottom ). s_len and s_cursorpos is a BYTE respectively. s_left, s_top, s_right and s_bottom is a WCHAR(short). Here s_len is the character count of the substring, s_cursorpos is the cursor position in the substring, and (s_left, s_top, s_right, s_bottom ) is the bounding rectangle of the substring in the screen coordinates.
+
+Return Values
+
+The return value is the total substrings' count in the specified rectangle (left, top, right, bottom).
+Remarks
+
+The following steps indicate how to use this function:
+
+1. Let LONG N=GetRectStringPairs (hWnd, left, top, right, bottom, pstr, prectlist). So we get the total substrings' count N.
+
+2. Loop N times. Each time use GetPairItem to decode each substring.
+
+Each item in prectlist is a six-parts element  (s_len, s_cursorpos, s_left, s_top, s_right, s_bottom ), it has the following structure. (NOTE: The structure maybe changes in the future, your application SHOULD NOT decode this structure directly. Please use GetPairItem to decode this structure instead.)
+
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreePairs should be called after successfully getting the captured string. 
+
+In developments which deallocate string automatically, such as Visual Basic, 
+FreePairs needs not to be called after successfully getting the captured string.
+*/
+
+
+
+
+LONG GetPairItem(
+  LONG  strCount,        // the total substring count
+  BSTR* pbstr,           // the captured string
+  BSTR* prectlist,       // the rectangle list
+  LONG  index,           // the zero-based index of the substring
+  BSTR* substr,          // the literal of the substring
+  LONG* substrCursorPos, // the cursor position in the substring
+  LONG* substrLeft,      // x-coordinate of upper-left corner of the substring
+  LONG* substrTop,       // y-coordinate of upper-left corner of the substring
+  LONG* substrRight,     // x-coordinate of lower-right corner of the substring
+  LONG* substrBottom     // y-coordinate of lower-right corner of the substring
+);
+/*
+The GetPairItem extracts a substring (substring, substring's rectangle) from the result retrieved by GetRectStringPairs.
+Parameters
+
+strCount
+    [in] Specifies the total substring count. It is the return value of GetRectStringPairs.
+
+pbstr
+    [in] Pointer to a BSTR string that carries the captured string.  It is the pbstr parameter got by GetRectStringPairs.
+prectlist
+    [in] Pointer to a list. It is the prectlist parameter got by GetRectStringPairs.
+index
+    [in] Specifies the zero-based index of the substring. It is a value in the range of [0, strCount-1].
+substr
+    [out] Pointer to a BSTR string that receives the literal of the substring
+substrCursorPos
+    [out] Pointer to a LONG variable that receives the cursor position (zero-based) in the substring. If the cursor is not in the substring, substrCursorPos is -1.
+substrLeft
+    [out] Pointer to a LONG variable that receives the x-coordinate of upper-left corner of the substring in screen coordinates.
+substrTop
+    [out] Pointer to a LONG variable that receives the y-coordinate of upper-left corner of the substring in screen coordinates.
+substrRight 
+    [out] Pointer to a LONG variable that receives the x-coordinate of lower-right corner of the substring in screen coordinates.
+substrBottom
+    [out] Pointer to a LONG variable that receives the y-coordinate of lower-right corner of the substring in screen coordinates.
+
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+
+In developments which don't deallocate string automatically, such as Visual C++, FreeString should be called after successfully getting the captured string. In developments which deallocate string automatically, such as Visual Basic, FreeString needs not to be called after successfully getting the captured string.
+FreePairs
+*/
+
+
+
+
+
+BOOL FreePairs(
+  BSTR* pstr     	// Pointer to a BSTR string
+  BSTR* prectlist     	// Pointer to a BSTR string
+);
+/*
+Parameters
+
+pstr
+    [in, out] Pointer to a BSTR string that should be deallocated. After successfully deallocated the string, pstr is set to NULL.
+
+prectlist
+    [in, out] Pointer to a BSTR string that should be deallocated. After successfully deallocated the string, prectlist is set to NULL.
+
+Return Values
+
+If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.
+Remarks
+
+In developments which don't deallocate string automatically, such as Visual C++, 
+FreePairs should be called after successfully getting the captured string with GetRectStringPairs. 
+
+In developments which deallocate string automatically, such as Visual Basic, 
+FreePairs needs not to be called after successfully getting the captured string  with GetRectStringPairs.
+*/
+
+
+//END C-FUNCTION PROTOTYPE 2018-05-28 08:42:12
+
+
+/*
+GetWord.lib dump from GetWord.dll
+The origianl reademe.txt us saying API V5.0, not like website saying API V4
+export function name
+
+::feature control function
+          5    1 0000FC70 EnableCursorCapture
+          7    2 0000FE50 EnableHighlightCapture
+          6    3 0000FD30 EnableHotkeyCapture
+          4   12 0000ECD0 SetDelay
+          1   14 0000FA90 SetLicenseID
+          2   16 000105F0 SetNotifyWnd
+          3   17 000102A0 UnSetNotifyWnd
+::memory management function
+         14    4 0000F3A0 FreePairs
+         10    5 0000EF30 FreeString
+::text function
+         23    0 0000F7F0 CopyTextBuffer
+         16    6 0000F690 GetHighlightText
+         24    7 0000F740 GetHighlightText2
+         15    8 0000F450 GetPairItem
+         13    9 0000F270 GetPointStringPairs
+         11    A 0000EFE0 GetRectString
+         12    B 0000F110 GetRectStringPairs
+          8    C 0000ED80 GetString
+          9    D 0000EE50 GetString2
+::handler function
+         18    E 00010350 RemoveCaptureReadyCallback
+         20    F 00010410 RemoveHighlightReadyCallback
+         22   10 000104D0 RemoveMouseMonitorCallback
+         17   11 000106A0 SetCaptureReadyCallback
+         19   13 00010760 SetHighlightReadyCallback
+         21   15 00010820 SetMouseMonitorCallback
+          
+*/
