@@ -1,8 +1,8 @@
 // GetWord v4 API Reference
-// downlaod http://www.textcapture.com/gb/api.htm, http://www.textcapture.com/en/api.htm
+// download http://www.textcapture.com/gb/api.htm, http://www.textcapture.com/en/api.htm
 // 2018-05-28 08:37:17
 // by xiaolaba
-// copy and format this API document to be C function prototype, for VC++ call and test
+// copy and format this API document to be C function prototype, for VC++ & MASM32 call and test
 
 
 
@@ -383,7 +383,8 @@ FreePairs needs not to be called after successfully getting the captured string 
 
 /*
 GetWord.lib dump from GetWord.dll
-The origianl reademe.txt us saying API V5.0, not like website saying API V4
+The original reademe.txt is saying version V5.0, and the API document website is saying API V4
+
 export function name
 
 ::feature control function
